@@ -1,0 +1,114 @@
+{
+    "name": "Controller",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "16231189-cf5d-45ed-ab16-505354beeea0",
+            "actions": [
+                {
+                    "name": "Movement",
+                    "type": "Value",
+                    "id": "c3c36b85-c36e-498d-871f-3830d5943978",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Value",
+                    "id": "904ad9f2-220e-4d5a-a18f-fabedaec871e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "f818d31c-e2c9-42d5-8cee-c3b8a1b85422",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Dash",
+                    "type": "Value",
+                    "id": "0d94a61c-338d-42e0-8b2d-f1d2f20e67c2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Interact",
+                    "type": "Value",
+                    "id": "6eb687b2-e4c7-4e53-843b-1a4a3a9aef57",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "698aec6a-a1c8-47f4-89ba-72cf8639d596",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8fe254e-75fd-4017-84c9-305a07f18eaf",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f48dc3d6-fb94-4217-a504-dd2c41da525d",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4ca00ee-b3f5-4d73-8966-f646aef37f19",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f46a7f7f-c6f2-4082-bdfd-9bb7495704b4",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
