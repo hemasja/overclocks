@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] float health, maxHealth = 3f;
+    [SerializeField] public float health, maxHealth = 3f;
     [SerializeField] private Slider slider;
     Rigidbody2D rb;
 
