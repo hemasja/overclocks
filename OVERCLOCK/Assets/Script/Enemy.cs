@@ -7,9 +7,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] float health, maxHealth = 3f;
     [SerializeField] FloatingHealthBar healthBar;
     [SerializeField] float moveSpeed = 5f;
+    
     Rigidbody2D rb;
     Transform target;
     Vector2 moveDirection;
+
+    public PlayerMovement playerMovement;
 
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
@@ -42,5 +45,21 @@ public class Enemy : MonoBehaviour
         if(health <= 0 ){
             Destroy(gameObject);
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision){
+
+        if(collision.gameObject.TryGetComponent<PlayerStats>(out PlayerStats playerComponent)){
+            playerComponent.takeDamage(1);
+            playerMovement.KBcounter = playerMovement.KBTotalTime;
+            if(collision.transform.position.x <= transform.position.x){
+                playerMovement.knockFromRight = true;
+            }
+            if(collision.transform.position.x > transform.position.x){
+                playerMovement.knockFromRight = false;
+            }
+            
+        }
+
     }
 }
