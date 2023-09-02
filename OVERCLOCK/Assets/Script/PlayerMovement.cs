@@ -8,15 +8,19 @@ public class PlayerMovement : MonoBehaviour
     Controller controls;
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] Rigidbody2D rb;
+    bool isMoving;
 
     Vector2 moveDirection;
     bool isDashing;
     bool canDash = true;
+    public Animator animator;
 
     [Header("Dash Settings")]
     [SerializeField] float dashSpeed = 10f;
     [SerializeField] float dashDuration = 1f;
     [SerializeField] float dashCooldown = 1f;
+    [SerializeField] private Transform playerSpriteTransform;
+
 
 
     void Awake()
@@ -41,9 +45,10 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-
+        
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
+        
 
         if ((Input.GetKeyDown(KeyCode.Space) || controls.Gameplay.Dash.triggered) && canDash)
         {
@@ -51,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         moveDirection = new Vector2(moveX, moveY).normalized;
+        FlipPlayerSprite(moveX);
 
         // // Flip character based on movement direction
         // if (moveDirection.x > 0)
@@ -61,6 +67,8 @@ public class PlayerMovement : MonoBehaviour
         // {
         //     FlipCharacter(true);
         // }
+        animator.SetBool("Move", isMoving);
+        
     }
 
     private void FixedUpdate()
@@ -72,8 +80,13 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
+            
+            isMoving = rb.velocity.magnitude > 0;
+            
         }
+        float moveX = controls.Gameplay.Movement.ReadValue<Vector2>().x;
 
+        FlipPlayerSprite(moveX);
     }
 
     private IEnumerator Dash()
@@ -94,6 +107,20 @@ public class PlayerMovement : MonoBehaviour
         newScale.x = Mathf.Abs(newScale.x) * (faceLeft ? -1 : 1);
         rb.transform.localScale = newScale;
     }
+    private void FlipPlayerSprite(float moveX)
+    {
+        Vector3 newScale = playerSpriteTransform.localScale;
+        if (moveX > 0)
+        {
+            newScale.x = Mathf.Abs(newScale.x);
+        }
+        else if (moveX < 0)
+        {
+            newScale.x = -Mathf.Abs(newScale.x);
+        }
+        playerSpriteTransform.localScale = newScale;
+    }
+
 
     void OnEnable()
     {

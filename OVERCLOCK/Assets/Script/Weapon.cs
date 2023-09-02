@@ -21,6 +21,8 @@ public class Weapon : MonoBehaviour
     public LayerMask enemyLayer;
 
     public float fireforce;
+    [SerializeField] private PlayerStats playerStats;
+    public Animator animator;
 
 
     private bool usingController = false; // Track if the controller is being used
@@ -34,6 +36,7 @@ public class Weapon : MonoBehaviour
         controls.Gameplay.Rotate.canceled += ctx => usingController = false;
 
         controls.Gameplay.Enable();
+        playerStats = FindObjectOfType<PlayerStats>();
 
     }
 
@@ -45,6 +48,8 @@ public class Weapon : MonoBehaviour
             }
             if(WeaponManager.keyCounts == 1){
             Attack();
+            animator.SetBool("Attack",true);
+            StartCoroutine(ResetIsAttacking());
             }
         }
 
@@ -60,9 +65,15 @@ public class Weapon : MonoBehaviour
 
         if (!usingController && Input.GetMouseButtonUp(0) && chargeTime >= 2)
         {
-
+            if(PlayerStats.mana >= 20){
             ChargeAttack();
             isCharging = false;
+            playerStats.DrainMana(20);
+            animator.SetBool("Attack",true);
+            StartCoroutine(ResetIsAttacking());
+            }else if(PlayerStats.mana < 20){
+                Debug.Log("OutOfMana");
+            }
         }
         else if (!usingController && Input.GetMouseButtonUp(0) && chargeTime < 2)
         {
@@ -103,14 +114,19 @@ public class Weapon : MonoBehaviour
     }
 
     public void fire()
-    {
+    {   if(PlayerStats.mana > 0){
         GameObject projectile = Instantiate(bullet, firePoint.position, firePoint.rotation);
         projectile.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireforce, ForceMode2D.Impulse);
+        playerStats.DrainMana(5);
+        }else if(PlayerStats.mana <= 0){
+            Debug.Log("outOfMana");
+        }
     }
 
     public void Attack(){
         Collider2D[] hitEnemy = Physics2D.OverlapCircleAll(firePoint.position, fireRange, enemyLayer);
         
+        Debug.Log("test hit");
         foreach(Collider2D enemy in hitEnemy){
             enemy.gameObject.TryGetComponent<Enemy>(out Enemy component);
             component.takeDamage(1);
@@ -144,16 +160,24 @@ public class Weapon : MonoBehaviour
         // transform.localScale.y * chargeRange / 2 * upSlash),
         // new Vector2(transform.localScale.x * chargeRange * (1 - upSlash), 1 + (transform.localScale.y * chargeRange * upSlash)),
         // 0, enemyLayers);
-
-        Collider2D[] hitEnemy = Physics2D.OverlapCircleAll(firePoint.position, fireRange, enemyLayer);
         
+            Collider2D[] hitEnemy = Physics2D.OverlapCircleAll(firePoint.position, fireRange, enemyLayer);
+            
+            
+            foreach(Collider2D enemy in hitEnemy){
+                enemy.gameObject.TryGetComponent<Enemy>(out Enemy component);
+                component.takeDamage(3);
+            
+            }
         
-        foreach(Collider2D enemy in hitEnemy){
-            enemy.gameObject.TryGetComponent<Enemy>(out Enemy component);
-            component.takeDamage(3);
-            enemy.gameObject.TryGetComponent<PlayerStats>(out PlayerStats player1);
-            player1.DrainMana(20);
-        }
     }
+        private IEnumerator ResetIsAttacking()
+        {
+            // Menunggu beberapa detik sesuai dengan durasi animasi serangan
+            yield return new WaitForSeconds(0.3f);
+
+            // Mengatur kembali bool "IsAttacking" ke false setelah serangan selesai
+            animator.SetBool("Attack", false);
+        }
     
 }
