@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float health, maxHealth = 3f;
     [SerializeField] FloatingHealthBar healthBar;
     [SerializeField] float moveSpeed = 5f;
+    EnemyVisionZone enemyVisionZone;
     
     Rigidbody2D rb;
     Transform target;
@@ -18,6 +19,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         healthBar = GetComponentInChildren<FloatingHealthBar>();
         playerMovement = GetComponent<PlayerMovement>();
+        enemyVisionZone = GetComponentInChildren<EnemyVisionZone>();
     }
     private void Start(){
         health = maxHealth;
@@ -26,17 +28,25 @@ public class Enemy : MonoBehaviour
     }
 
     private void Update(){
-        if(target){
-            Vector3 direction = (target.position - transform.position).normalized;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            rb.rotation = angle;
-            moveDirection = direction;
+        if(enemyVisionZone.IsInRange){
+            if(target){
+                Vector3 direction = (target.position - transform.position).normalized;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                rb.rotation = angle;
+                moveDirection = direction;
+            }
+        }else{
+            rb.velocity = Vector2.zero;
         }
     }
 
     private void FixedUpdate(){
-        if(target){
+        if(enemyVisionZone.IsInRange){
+            if(target){
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
+            }
+        }else{
+            rb.velocity = Vector2.zero;
         }
     }
 
@@ -55,16 +65,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Tambahkan method baru untuk mengejar pemain
-    private void OnTriggerStay2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
-            target = other.transform;
-        }
-    }
+   
 
-    // Tambahkan method untuk menghentikan pengejaran saat pemain keluar dari area musuh
-    private void OnTriggerExit2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
-            target = null;
-        }
-    }
+    
 }

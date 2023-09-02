@@ -7,7 +7,7 @@ public class WeaponManager : MonoBehaviour
     PlayerStats health;
     public GameObject Meele;
     public GameObject Gun;
-    public static int keyCounts = 0;
+    public static int keyCounts = 1;
 
     void Awake()
     {
@@ -43,14 +43,16 @@ public class WeaponManager : MonoBehaviour
     {   
 
             if (keyCounts == 0)
-            {
+            {   
                 Gun.SetActive(true);
                 Meele.SetActive(false);
+                
             }
             else if (keyCounts == 1)
             {
-                Gun.SetActive(false);
                 Meele.SetActive(true);
+                Gun.SetActive(false);
+                
             }
           
     }
