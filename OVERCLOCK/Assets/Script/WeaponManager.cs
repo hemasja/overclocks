@@ -36,6 +36,7 @@ public class WeaponManager : MonoBehaviour
                 keyCounts = 0;
             }
         }
+        StopAllCoroutines();
     }
 
     public void changeWeapon()

@@ -18,13 +18,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashDuration = 1f;
     [SerializeField] float dashCooldown = 1f;
 
-    [Space(10)]
-    [Header("Knockback Setting")]
-    [SerializeField] float KBforce;
-    [SerializeField] public float KBcounter;
-    [SerializeField] public float KBTotalTime;
-    public Vector2 knockbackDirection;
-    public bool knockFromRight;
 
     void Awake()
     {
@@ -59,15 +52,15 @@ public class PlayerMovement : MonoBehaviour
 
         moveDirection = new Vector2(moveX, moveY).normalized;
 
-        // Flip character based on movement direction
-        if (moveDirection.x > 0)
-        {
-            FlipCharacter(false);
-        }
-        else if (moveDirection.x < 0)
-        {
-            FlipCharacter(true);
-        }
+        // // Flip character based on movement direction
+        // if (moveDirection.x > 0)
+        // {
+        //     FlipCharacter(false);
+        // }
+        // else if (moveDirection.x < 0)
+        // {
+        //     FlipCharacter(true);
+        // }
     }
 
     private void FixedUpdate()
@@ -81,18 +74,6 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
         }
 
-        if(KBcounter < 0){
-            
-        }else{
-            if(knockFromRight == true){
-                rb.velocity = new Vector2(-KBforce, KBforce);
-            }
-            if(knockFromRight == false){
-                rb.velocity = new Vector2(KBforce, KBforce);
-            }
-
-            KBcounter -= Time.deltaTime;
-        }
     }
 
     private IEnumerator Dash()

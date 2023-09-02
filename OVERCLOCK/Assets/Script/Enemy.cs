@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
         healthBar = GetComponentInChildren<FloatingHealthBar>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
     private void Start(){
         health = maxHealth;
@@ -48,18 +49,22 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision){
-
         if(collision.gameObject.TryGetComponent<PlayerStats>(out PlayerStats playerComponent)){
             playerComponent.takeDamage(1);
-            playerMovement.KBcounter = playerMovement.KBTotalTime;
-            if(collision.transform.position.x <= transform.position.x){
-                playerMovement.knockFromRight = true;
-            }
-            if(collision.transform.position.x > transform.position.x){
-                playerMovement.knockFromRight = false;
-            }
-            
         }
+    }
 
+    // Tambahkan method baru untuk mengejar pemain
+    private void OnTriggerStay2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            target = other.transform;
+        }
+    }
+
+    // Tambahkan method untuk menghentikan pengejaran saat pemain keluar dari area musuh
+    private void OnTriggerExit2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            target = null;
+        }
     }
 }

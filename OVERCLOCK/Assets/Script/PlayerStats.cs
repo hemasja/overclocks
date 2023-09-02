@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] public float health, maxHealth = 3f;
-    [SerializeField] private Slider slider;
+    [SerializeField] public float health, maxHealth = 3f, maxMana = 100f;
+    [SerializeField] public static float mana;
+    [SerializeField] private Slider sliderHealth;
+    [SerializeField] private Slider sliderMana;
     Rigidbody2D rb;
 
     private void Awake(){
@@ -16,6 +18,7 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         health = maxHealth;
+        mana = maxMana;
 
     }
 
@@ -33,6 +36,15 @@ public class PlayerStats : MonoBehaviour
         
     }
     public void UpdateHealthBarPlayer(float currentValue, float maxValue){
-        slider.value = currentValue / maxValue;
+        sliderHealth.value = currentValue / maxValue;
+    }
+
+    public void DrainMana(float manaDrain){
+        mana -= manaDrain;
+        UpdateManaBarPlayer(mana, maxMana);
+
+    }
+    public void UpdateManaBarPlayer(float currentValue, float maxValue){
+        sliderMana.value = currentValue / maxValue;
     }
 }

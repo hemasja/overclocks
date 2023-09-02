@@ -9,6 +9,11 @@ public class Weapon : MonoBehaviour
     Controller controls;
     [SerializeField] Transform weaponTransform;
     [SerializeField] float rotationSpeed = 10f;
+    
+    public float chargeSpeed = 2f;
+    float chargeTime = 0f;
+    public float chargeRange = 10f;
+    private bool isCharging;
 
     public GameObject bullet;
     public Transform firePoint;
@@ -42,6 +47,29 @@ public class Weapon : MonoBehaviour
             Attack();
             }
         }
+
+        if (!usingController && Input.GetMouseButton(0) && chargeTime < 2)
+        {
+            isCharging = true;
+            if (isCharging)
+            {
+                chargeTime += Time.deltaTime * chargeSpeed;
+                Debug.Log("das");
+            }
+        }
+
+        if (!usingController && Input.GetMouseButtonUp(0) && chargeTime >= 2)
+        {
+
+            ChargeAttack();
+            isCharging = false;
+        }
+        else if (!usingController && Input.GetMouseButtonUp(0) && chargeTime < 2)
+        {
+            chargeTime = 0f;
+            isCharging = false;
+        }
+        
     }
 
     private void FixedUpdate()
@@ -86,6 +114,16 @@ public class Weapon : MonoBehaviour
         foreach(Collider2D enemy in hitEnemy){
             enemy.gameObject.TryGetComponent<Enemy>(out Enemy component);
             component.takeDamage(1);
+
+            // Calculate knockback direction
+            Vector2 knockbackDirection = (firePoint.position - enemy.transform.position).normalized;
+
+            // Apply knockback force to the enemy's rigidbody
+            Rigidbody2D enemyRigidbody = enemy.GetComponent<Rigidbody2D>();
+            if (enemyRigidbody != null)
+            {   Debug.Log("knock");
+                enemyRigidbody.AddForce(knockbackDirection * fireforce, ForceMode2D.Impulse);
+            }
             
         }
     }
@@ -97,5 +135,25 @@ public class Weapon : MonoBehaviour
         Gizmos.DrawWireSphere(firePoint.position, fireRange);
     }
 
+    private void ChargeAttack()
+    {
+        // currentFacingTime = facing;
+
+        // Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(new Vector2(attackPoint.position.x +
+        // transform.localScale.x * chargeRange / 2 * currentFacingTime * (1 - upSlash), attackPoint.position.y +
+        // transform.localScale.y * chargeRange / 2 * upSlash),
+        // new Vector2(transform.localScale.x * chargeRange * (1 - upSlash), 1 + (transform.localScale.y * chargeRange * upSlash)),
+        // 0, enemyLayers);
+
+        Collider2D[] hitEnemy = Physics2D.OverlapCircleAll(firePoint.position, fireRange, enemyLayer);
+        
+        
+        foreach(Collider2D enemy in hitEnemy){
+            enemy.gameObject.TryGetComponent<Enemy>(out Enemy component);
+            component.takeDamage(3);
+            enemy.gameObject.TryGetComponent<PlayerStats>(out PlayerStats player1);
+            player1.DrainMana(20);
+        }
+    }
     
 }
